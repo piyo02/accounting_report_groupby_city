@@ -40,7 +40,7 @@ class AccountReportByCiity(models.TransientModel):
             partners = self.env['res.partner'].search([('kota_id.name', '=', city.name)])
         
             for partner in partners:
-                invoices = self.env['account.invoice'].search([ ('date_invoice', '>=', self.start_date), ('date_invoice', '<=', self.end_date), ('state', '=', 'open'), ['partner_id.name', '=', partner.display_name] ])
+                invoices = self.env['account.invoice'].search([ ('date_invoice', '<=', self.end_date), ('date_invoice', '>=', self.start_date), ('state', '=', 'open'), ['partner_id.name', '=', partner.display_name] ], order="date_invoice asc")
                 groupby_dict[city.name] = invoices
 
         final_dict = {}
