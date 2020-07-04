@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="city_temp">
+        <t t-call="report.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                    <div class="row">
+                    <center>
+                        <b>
+                            <h4>Customer Invoices By City</h4>
+                        </b>
+                    </center>
+                    <center>
+                        <b>
+                            <span t-esc="start_date"/>
+                            To
+                            <span t-esc="end_date"/>
+                        </b>
+                    </center>
+                </div>
+                <br/>
+                <t t-foreach="data.keys()" t-as="city">
+                    <center>
+                        <b>
+                            <span t-esc="city"/>
+                        </b>
+                    </center>
+                    <t t-set="total_sum" t-value="0"/>
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Pelanggan</th>
+                                <th class="text-center">Sumber Dokumen</th>
+                                <th class="text-center">No Transaksi</th>
+                                <th class="text-center">Tanggal Tagihan</th>
+                                <th class="text-center">Tanggal Jatuh Tempo</th>
+                                <th class="text-center">Total Tagihan</th>
+                                <th class="text-right">Sisa Tagihan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data[city]" t-as="invoices">
+                                <td>
+                                    <span t-esc="invoices[0]"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="invoices[4]"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="invoices[2]"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="invoices[1]"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="invoices[3]"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="'{:,}'.format(invoices[5])"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,}'.format(invoices[6])"/>
+                                    <t t-set="total_sum" t-value="total_sum + invoices[6]"/>
+                                </td>
+                            </tr>            
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,}'.format(total_sum)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
