@@ -25,46 +25,78 @@
                             <span t-esc="city"/>
                         </b>
                     </center>
+                    
                     <t t-set="total_sum" t-value="0"/>
-                    <table class="table table-condensed table-striped">
-                        <thead>
-                            <tr>
-                                <th>Pelanggan</th>
-                                <th class="text-center">Sumber Dokumen</th>
-                                <th class="text-center">No Transaksi</th>
-                                <th class="text-center">Tanggal Tagihan</th>
-                                <th class="text-center">Tanggal Jatuh Tempo</th>
-                                <th class="text-center">Total Tagihan</th>
-                                <th class="text-right">Sisa Tagihan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="data[city]" t-as="invoices">
-                                <td>
-                                    <span t-esc="invoices[0]"/>
-                                </td>
-                                <td class="text-center">
-                                    <span t-esc="invoices[4]"/>
-                                </td>
-                                <td class="text-center">
-                                    <span t-esc="invoices[2]"/>
-                                </td>
-                                <td class="text-center">
-                                    <span t-esc="invoices[1]"/>
-                                </td>
-                                <td class="text-center">
-                                    <span t-esc="invoices[3]"/>
-                                </td>
-                                <td class="text-center">
-                                    <span t-esc="'{:,}'.format(invoices[5])"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-esc="'{:,}'.format(invoices[6])"/>
-                                    <t t-set="total_sum" t-value="total_sum + invoices[6]"/>
-                                </td>
-                            </tr>            
-                        </tbody>
-                    </table>
+                    <t t-set="current_partner" t-value="a"/>
+                    <t t-set="amount_total_invoice" t-value="0"/>
+
+                    <t t-foreach="data[city]" t-as="invoices">
+                        <table class="table table-condensed table-striped">
+                            <thead >
+                                <tr>
+                                    <th>Pelanggan</th>
+                                    <th>Salesperson</th>
+                                    <th>Sumber Dokumen</th>
+                                    <th class="text-right">Tanggal Tagihan</th>
+                                    <th class="text-right">Tanggal Jatuh Tempo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-esc="invoices[0]"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="invoices[7]"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="invoices[4]"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="invoices[1]"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="invoices[3]"/>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="5"></td></tr>
+                                <tr>
+                                    <tr>
+                                        <td><b>No Transaksi</b></td>
+                                        <td class="text-right"><b>Kredit Limit</b></td>
+                                        <td class="text-right"><b>Sisa Kredit Limit</b></td>
+                                        <td class="text-right"><b>Total Tagihan</b></td>
+                                        <td class="text-right"><b>Sisa Tagihan</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="invoices[2]"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{:,}'.format(invoices[8])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="current_partner == invoices[0]">
+                                                <t t-set="amount_total_invoice" t-value="amount_total_invoice + invoices[6]"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-set="current_partner" t-value="invoices[0]"/>
+                                                <t t-set="amount_total_invoice" t-value="invoices[6]"/>
+                                            </t>
+                                            <span t-esc="'{:,}'.format(invoices[8]-amount_total_invoice)"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{:,}'.format(invoices[5])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{:,}'.format(invoices[6])"/>
+                                            <t t-set="total_sum" t-value="total_sum + invoices[6]"/>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
 
                     <div class="row">
                         <div class="col-xs-4 pull-right">

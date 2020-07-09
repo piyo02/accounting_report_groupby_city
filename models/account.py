@@ -55,6 +55,8 @@ class AccountReportByCiity(models.TransientModel):
                 temp_2.append(invoice.origin)
                 temp_2.append(invoice.amount_total_signed )
                 temp_2.append(invoice.residual_signed )
+                temp_2.append(invoice.user_id.name)
+                temp_2.append(invoice.partner_id.credit_limit)
                 temp.append(temp_2)
             final_dict[city] = temp
         datas = {
