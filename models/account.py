@@ -29,12 +29,14 @@ class AccountReportByCiity(models.TransientModel):
 
     start_date = fields.Date('Start Date', required=True)
     end_date = fields.Date(string="End Date", required=True)
-    city_ids = fields.Many2many("vit.kota", string='Kota')
+    city_ids = fields.Many2many("vit.kota", string='Kota', required=False)
 
     
     @api.multi
     def print_accounting_report_by_city(self):
         groupby_dict = {}
+        if len(self.city_ids) == 0:
+            self.city_ids = self.env['vit.kota'].search([])
 
         for city in self.city_ids:
             partners = self.env['res.partner'].search([('kota_id.name', '=', city.name)])

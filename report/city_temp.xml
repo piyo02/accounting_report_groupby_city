@@ -20,12 +20,13 @@
                 </div>
                 <br/>
                 <t t-foreach="data.keys()" t-as="city">
-                    <center style="margin-bottom: 10px;">
-                        <b>
-                            <span t-esc="city"/>
-                        </b>
-                    </center>
-                    
+                    <t t-if="data[city]">
+                        <center style="margin-bottom: 10px;">
+                            <b>
+                                <span t-esc="city"/>
+                            </b>
+                        </center>
+                    </t>
                     <t t-set="total_sum" t-value="0"/>
                     <t t-set="current_partner" t-value="a"/>
                     <t t-set="amount_total_invoice" t-value="0"/>
