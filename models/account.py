@@ -45,6 +45,7 @@ class AccountReportByCiity(models.TransientModel):
                     ('date_invoice', '<=', self.end_date), 
                     ('date_invoice', '>=', self.start_date), 
                     ('state', '=', 'open'), 
+                    ('type', '=', 'out_invoice'), 
                     ('partner_id.name', '=', partner.display_name) 
                 ],
                 order="date_invoice asc")
