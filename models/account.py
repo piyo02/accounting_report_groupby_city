@@ -38,31 +38,40 @@ class AccountReportByCiity(models.TransientModel):
 
         for city in self.city_ids:
             partners = self.env['res.partner'].search([('kota_id.name', '=', city.name)])
-        
+                        
+            partner_detail = []
             for partner in partners:
-                invoices = self.env['account.invoice'].search([ ('date_invoice', '<=', self.end_date), ('date_invoice', '>=', self.start_date), ('state', '=', 'open'), ['partner_id.name', '=', partner.display_name] ], order="date_invoice asc")
-                groupby_dict[city.name] = invoices
+                invoices = self.env['account.invoice'].search([ 
+                    ('date_invoice', '<=', self.end_date), 
+                    ('date_invoice', '>=', self.start_date), 
+                    ('state', '=', 'open'), 
+                    ('partner_id.name', '=', partner.display_name) 
+                ],
+                order="date_invoice asc")
+                partner_temp = []
+                partner_invoices = []
+                partner_temp.append(partner.display_name) #0
+                partner_temp.append(partner.credit_limit) #1
+                for invoice in invoices:
+                    partner_invoice = []
+                    partner_invoice.append(invoice.date_invoice) #0
+                    partner_invoice.append(invoice.number) #1
+                    partner_invoice.append(invoice.date_due) #2
+                    partner_invoice.append(invoice.origin) #3
+                    partner_invoice.append(invoice.amount_total_signed ) #4
+                    partner_invoice.append(invoice.residual_signed ) #5
+                    partner_invoice.append(invoice.user_id.name) #6
+                    partner_invoices.append(partner_invoice)
 
-        final_dict = {}
-        for city in groupby_dict.keys():
-            temp = []
-            for invoice in groupby_dict[city]:
-                temp_2 = []
-                temp_2.append(invoice.partner_id.name)
-                temp_2.append(invoice.date_invoice)
-                temp_2.append(invoice.number)
-                temp_2.append(invoice.date_due)
-                temp_2.append(invoice.origin)
-                temp_2.append(invoice.amount_total_signed )
-                temp_2.append(invoice.residual_signed )
-                temp_2.append(invoice.user_id.name)
-                temp_2.append(invoice.partner_id.credit_limit)
-                temp.append(temp_2)
-            final_dict[city] = temp
+                partner_temp.append(partner_invoices)
+                partner_detail.append(partner_temp)
+
+            groupby_dict[city.name] = partner_detail
+
         datas = {
             'ids': self.ids,
             'model': 'account.account.report',
-            'form': final_dict,
+            'form': groupby_dict,
             'start_date': self.start_date,
             'end_date': self.end_date,
 
