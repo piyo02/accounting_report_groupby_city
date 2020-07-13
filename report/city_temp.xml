@@ -7,7 +7,7 @@
                     <div class="row">
                     <center>
                         <b>
-                            <h4>Customer Invoices By City</h4>
+                            <h4>Piutang dan Kredit Limit per Kota</h4>
                         </b>
                     </center>
                     <center>
@@ -33,11 +33,36 @@
 
                     <t t-foreach="data[city]" t-as="invoices">
                         <t t-if="invoices[2] == []">
+                            <t t-if="invoices[4] == 1">
+                                <table class="table table-condensed table-striped">
+                                    <thead >
+                                        <tr>
+                                            <th>Pelanggan</th>
+                                            <th class="text-right">Tagihan</th>
+                                            <th class="text-right">Kredit Limit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span t-esc="invoices[0]"/>
+                                            </td>
+                                            <td class="text-right">0</td>
+                                            <td class="text-right">
+                                                <span t-esc="'{:,}'.format(invoices[1])"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
+                        <t t-else="">
                             <table class="table table-condensed table-striped">
                                 <thead >
                                     <tr>
                                         <th>Pelanggan</th>
                                         <th class="text-right">Kredit Limit</th>
+                                        <th class="text-right">Sisa Kredit Limit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -48,74 +73,51 @@
                                         <td class="text-right">
                                             <span t-esc="'{:,}'.format(invoices[1])"/>
                                         </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{:,}'.format(invoices[1]-invoices[3])"/>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </t>
-                        <t t-else="">
                             <t t-foreach="invoices[2]" t-as="invoice">
                                 <table class="table table-condensed table-striped">
-                                    <thead >
-                                        <tr>
-                                            <th>Pelanggan</th>
-                                            <th>Salesperson</th>
-                                            <th>Sumber Dokumen</th>
-                                            <th class="text-right">Tanggal Tagihan</th>
-                                            <th class="text-right">Tanggal Jatuh Tempo</th>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         <tr>
+                                            <td><b>Sumber Dokumen</b></td>
+                                            <td><b>Salesperson</b></td>
+                                            <td><b>Tanggal Jatuh Tempo</b></td>
+                                            <td><b>Tanggal Tagihan</b></td>
+                                        </tr>
+                                        <tr>
                                             <td>
-                                                <span t-esc="invoices[0]"/>
+                                                <span t-esc="invoice[3]"/>
                                             </td>
                                             <td>
                                                 <span t-esc="invoice[6]"/>
                                             </td>
                                             <td>
-                                                <span t-esc="invoice[3]"/>
-                                            </td>
-                                            <td class="text-right">
                                                 <span t-esc="invoice[0]"/>
                                             </td>
-                                            <td class="text-right">
+                                            <td>
                                                 <span t-esc="invoice[2]"/>
                                             </td>
                                         </tr>
-                                        <tr><td colspan="5"></td></tr>
                                         <tr>
-                                            <tr>
-                                                <td><b>No Transaksi</b></td>
-                                                <td class="text-right"><b>Kredit Limit</b></td>
-                                                <td class="text-right"><b>Sisa Kredit Limit</b></td>
-                                                <td class="text-right"><b>Total Tagihan</b></td>
-                                                <td class="text-right"><b>Sisa Tagihan</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span t-esc="invoice[1]"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'{:,}'.format(invoices[1])"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <t t-if="current_partner == invoices[0]">
-                                                        <t t-set="amount_total_invoice" t-value="amount_total_invoice + invoice[5]"/>
-                                                    </t>
-                                                    <t t-else="">
-                                                        <t t-set="current_partner" t-value="invoices[0]"/>
-                                                        <t t-set="amount_total_invoice" t-value="invoice[5]"/>
-                                                    </t>
-                                                    <span t-esc="'{:,}'.format(invoices[1]-amount_total_invoice)"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'{:,}'.format(invoice[4])"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'{:,}'.format(invoice[5])"/>
-                                                    <t t-set="total_sum" t-value="total_sum + invoice[5]"/>
-                                                </td>
-                                            </tr>
+                                            <td colspan="2"><b>No Transaksi</b></td>
+                                            <td class="text-right"><b>Total Tagihan</b></td>
+                                            <td class="text-right"><b>Sisa Tagihan</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <span t-esc="invoice[1]"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{:,}'.format(invoice[4])"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{:,}'.format(invoice[5])"/>
+                                                <t t-set="total_sum" t-value="total_sum + invoice[5]"/>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -123,7 +125,7 @@
                         </t>
                     </t>
 
-                    <t t-if="total_amount > 0">
+                    <t t-if="total_sum > 0">
                         <div class="row">
                             <div class="col-xs-4 pull-right">
                                 <table class="table table-condensed">

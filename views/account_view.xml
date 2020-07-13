@@ -5,7 +5,7 @@
             <field name="name">account.account.report.form.view</field>
             <field name="model">account.account.report</field>
             <field name="arch" type="xml">
-                <form string="Sales Report By City">
+                <form string="Piutang dan Kredit Limit per Kota">
                     <group>
                         <group>
                             <field name="start_date"/>
@@ -13,6 +13,7 @@
                         </group>
                         <group>
                             <field name="end_date"/>
+                            <field name="is_fully"/>
                         </group>
                     </group>
 
@@ -29,7 +30,7 @@
         </record>
 
         <record id="action_accounting_report_by_city_wizard" model="ir.actions.act_window">
-            <field name="name">Sales Report By City</field>
+            <field name="name">Piutang dan Kredit Limit per Kota</field>
             <field name="res_model">account.account.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -37,7 +38,7 @@
         </record>
 
         <menuitem id="sr_menu_accounting_report_by_city_wizard"
-                  name="Sales Report By City"
+                  name="Piutang dan Kredit Limit per Kota"
                   action="action_accounting_report_by_city_wizard"
                   parent="account.menu_finance_legal_statement"
                   sequence="1"/>

@@ -30,11 +30,16 @@ class AccountReportByCiity(models.TransientModel):
     start_date = fields.Date('Start Date', required=True)
     end_date = fields.Date(string="End Date", required=True)
     city_ids = fields.Many2many("vit.kota", string='Kota', required=False)
+    is_fully = fields.Boolean('Tampilkan Customer dengan Tagihan sama dengan 0')
 
     
     @api.multi
     def print_accounting_report_by_city(self):
         groupby_dict = {}
+        is_fully = 0
+        if self.is_fully:
+            is_fully = 1
+
         if len(self.city_ids) == 0:
             self.city_ids = self.env['vit.kota'].search([])
 
@@ -67,7 +72,10 @@ class AccountReportByCiity(models.TransientModel):
                     partner_invoices.append(partner_invoice)
 
                 partner_temp.append(partner_invoices)
-                partner_detail.append(partner_temp)
+                partner_temp.append(partner.risk_total) #3
+                
+                partner_temp.append(is_fully) #4
+                partner_detail.append(partner_temp) #2
 
             groupby_dict[city.name] = partner_detail
 
