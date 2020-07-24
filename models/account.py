@@ -75,6 +75,7 @@ class AccountReportByCiity(models.TransientModel):
                 partner_temp.append(partner.risk_total) #3
                 
                 partner_temp.append(is_fully) #4
+                partner_temp.append(partner.risk_invoice_open) #5
                 partner_detail.append(partner_temp) #2
 
             groupby_dict[city.name] = partner_detail
